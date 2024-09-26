@@ -79,11 +79,17 @@ public class AuthenticationService {
         }
     }
 
+    public boolean isRegisterConfirmRequestValid(RegisterConfirmRequest request) {
+        Optional<RegisterRequestEntity> registerEntity = registerRequestRepository.findById(request.getEmail());
+
+        return registerEntity.isPresent() && registerEntity.get().getUuid().equals(request.getUuid());
+    }
+
     public AuthenticationResponse registerConfirm(RegisterConfirmRequest request) {
         Optional<RegisterRequestEntity> registerEntity = registerRequestRepository.findById(request.getEmail());
 
-        if (registerEntity.isEmpty() || !registerEntity.get().getUuid().equals(request.getUuid()))
-            return AuthenticationResponse.builder().message("Invalid request").build();
+/*        if (registerEntity.isEmpty() || !registerEntity.get().getUuid().equals(request.getUuid()))
+            return AuthenticationResponse.builder().message("Invalid request").build();*/
 
         UserEntity user = UserEntity.builder()
                 .username(registerEntity.get().getUsername())
@@ -109,47 +115,6 @@ public class AuthenticationService {
         userRepository.save(user);
 
         return new AuthenticationResponse(jwtService.generateToken(user), "Registration successful!");
-    }
-
-    public void sendEmailAddressConfirmation(String email, String uuid) {
-        String colorCode = "2EA855";
-
-        try {
-            String encodedEmail = URLEncoder.encode(email, "UTF-8");
-            String encodedUuid = URLEncoder.encode(uuid, "UTF-8");
-
-            String url = APP_URL + "/auth/register/confirm?token="
-                    + "email=" + encodedEmail
-                    + "&uuid=" + encodedUuid;
-
-            String message = "<h1 style='color: #" + colorCode + ";'>Bine ai venit la " + APP_NAME + "!</h1>"
-                    + "<p>Pentru a finaliza înregistrarea, fă clic pe linkul de mai jos pentru a-ți activa contul:</p>"
-                    + "<a href='" + url + "' style='background-color: #" + colorCode + "; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Activează Contul</a>";
-
-            log.info(url);
-        } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-        }
-    }
-    private void sendResetPasswordEmail(String email, String uuid) {
-        String colorCode = "2EA855";
-
-        try {
-            String encodedEmail = URLEncoder.encode(email, "UTF-8");
-            String encodedUuid = URLEncoder.encode(uuid, "UTF-8");
-
-            String url = APP_URL + "/auth/register/confirm?token="
-                    + "email=" + encodedEmail
-                    + "&uuid=" + encodedUuid;
-
-            String message = "<h1 style='color: #" + colorCode + ";'>" + APP_NAME + "</h1>"
-                    + "<p>Pentru a resete parola, fă clic pe linkul de mai jos!</p>"
-                    + "<a href='" + url + "' style='background-color: #" + colorCode + "; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Reseteaza parola</a>";
-
-            log.info(url);
-        } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-        }
     }
 
     public boolean isRegistered(String email) {
@@ -316,7 +281,12 @@ public class AuthenticationService {
                 .build();
 
         resetPasswordRepository.save(resetPasswordEntity);
-        sendResetPasswordEmail(request.email(), uuid);
+
+        try {
+            emailService.sendEmail(request.email(), EmailMessages.resetPasswordSubject, EmailMessages.getResetPasswordEmailMessage(request.email(), uuid));
+        } catch (IOException e) {
+            log.info("Failed to send password reset email!");
+        }
     }
 
 

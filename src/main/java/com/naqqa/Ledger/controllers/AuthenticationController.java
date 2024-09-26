@@ -47,6 +47,9 @@ public class AuthenticationController {
     @PostMapping("/register-confirm")
     public ResponseEntity<AuthenticationResponse> registerConfirm(@RequestBody RegisterConfirmRequest request) {
 
+        if (!authenticationService.isRegisterConfirmRequestValid(request))
+            return new ResponseEntity<>(AuthenticationResponse.builder().message("Invalid request").build(), HttpStatus.BAD_REQUEST);
+
         return new ResponseEntity<>(authenticationService.registerConfirm(request), HttpStatus.OK);
     }
 

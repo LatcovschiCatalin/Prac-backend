@@ -54,12 +54,12 @@ public class EmailMessages {
         String resetButtonUrl = APP_URL + "/auth/reset-password?uuid=" + uuid
                 + "&email=" + email;
 
-        return "<h1 style='color: #3DF94E;'>Resetează-ți parola</h1>"
-                + "<p>Bună,</p>"
-                + "<p>Ai primit o solicitare de resetare a parolei. Pentru a continua cu resetarea parolei, te rugăm să faci clic pe linkul de mai jos:</p>"
-                + "<a href='" + resetButtonUrl + "' style='background-color: #3DF94E; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Resetează parola</a>"
-                + "<p>Mulțumim,</p>"
-                + "<p>Echipa " + APP_NAME +"</p>";
+        return "<h1 style='color: #" + hexColor + ";'>Reset your password</h1>"
+                + "<p>Hi,</p>"
+                + "<p>To reset your password please follow the link below:</p>"
+                + "<a href='" + resetButtonUrl + "' style='background-color: #" + hexColor +"; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Reset password</a>"
+                + "<p>Thank you,</p>"
+                + "<p>Team " + APP_NAME +"</p>";
     }
 
     // The following setters are used to initialize static variables as the @Value annotation does not support value injection into static fields
@@ -68,7 +68,5 @@ public class EmailMessages {
         APP_URL = appUrl;
     }
     @Value("${app.name}")
-    public void setStaticAppName(String appName) {
-        APP_NAME = appName;
-    }
+    public void setStaticAppName(String appName) { APP_NAME = appName; }
 }
