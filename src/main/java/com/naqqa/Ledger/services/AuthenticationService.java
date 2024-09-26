@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.naqqa.Ledger.configuration.EmailMessages;
 import com.naqqa.Ledger.entities.RegisterRequestEntity;
 import com.naqqa.Ledger.entities.ResetPasswordEntity;
 import com.naqqa.Ledger.entities.UserEntity;
@@ -49,6 +50,8 @@ public class AuthenticationService {
     @Value("${facebook.app-secret}")
     private String FACEBOOK_APP_SECRET;
 
+    private final EmailService emailService;
+
     private final UserRepository userRepository;
     private final RegisterRequestRepository registerRequestRepository;
     private final ResetPasswordRepository resetPasswordRepository;
@@ -69,7 +72,11 @@ public class AuthenticationService {
 
         registerRequestRepository.save(registerRequest);
 
-        sendEmailAddressConfirmation(request.email(), uuid);
+        try {
+            emailService.sendEmail(request.email(), EmailMessages.emailAddressConfirmationSubject, EmailMessages.getEmailAddressConfirmationMessage(uuid, request.email()));
+        } catch (IOException e) {
+            log.info("Failed to send email address confirmation!");
+        }
     }
 
     public AuthenticationResponse registerConfirm(RegisterConfirmRequest request) {
