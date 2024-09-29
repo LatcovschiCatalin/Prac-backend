@@ -4,6 +4,8 @@ import com.naqqa.Ledger.enums.AuthMethod;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Builder
 @Getter
 @Setter
@@ -22,4 +24,6 @@ public class UserEntity {
     private AuthMethod authMethod;
     private String externalId;
 
+    @OneToMany(mappedBy = "user")
+    Set<TransactionEntity> transactions;
 }

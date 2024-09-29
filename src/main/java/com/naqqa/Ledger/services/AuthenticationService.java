@@ -13,6 +13,7 @@ import com.naqqa.Ledger.model.*;
 import com.naqqa.Ledger.repositories.RegisterRequestRepository;
 import com.naqqa.Ledger.repositories.ResetPasswordRepository;
 import com.naqqa.Ledger.repositories.UserRepository;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -307,5 +309,23 @@ public class AuthenticationService {
                 .token(jwtService.generateToken(user.get()))
                 .message("Password reset successfully!")
                 .build();
+    }
+
+    public Optional<UserEntity> authorizeUser(String token) {
+        String sub;
+        try {
+            var decodedJWT = SignedJWT.parse(token.substring(7));
+            sub = decodedJWT.getJWTClaimsSet().getClaim("sub").toString();
+            log.info("sub: " + sub);
+        } catch (ParseException e) {
+            try {
+                throw new Exception("Invalid token!");
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        log.info(sub);
+        return userRepository.findByUsername(sub);
     }
 }
