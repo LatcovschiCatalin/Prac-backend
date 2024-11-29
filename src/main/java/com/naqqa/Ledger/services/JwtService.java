@@ -24,7 +24,7 @@ public class JwtService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .expiresAt(now.plus(4, ChronoUnit.HOURS))
                 .subject(user.getEmail())
                 .claim("scope", "none")
                 .build();

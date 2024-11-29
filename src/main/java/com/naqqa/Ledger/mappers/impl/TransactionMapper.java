@@ -5,25 +5,13 @@ import com.naqqa.Ledger.mappers.Mapper;
 import com.naqqa.Ledger.model.dto.TransactionDto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
 @Component
-//@AllArgsConstructor
+@AllArgsConstructor
 public class TransactionMapper implements Mapper<TransactionEntity, TransactionDto> {
 
     private final ModelMapper modelMapper;
-
-    public TransactionMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-
-        modelMapper.addMappings(new PropertyMap<TransactionEntity, TransactionDto>() {
-            @Override
-            protected void configure() {
-                skip(destination.getDescription());  // Skip mapping the tags field
-            }
-        });
-    }
 
     @Override
     public TransactionDto mapTo(TransactionEntity transactionEntity) {
