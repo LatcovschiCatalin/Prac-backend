@@ -24,8 +24,7 @@ public class CardEntity {
 //    @JoinColumn(name = "project_id")
 //    ProjectEntity project;
 
-    private float amount;
-    private float roi;
+    private String name;
 
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
 }

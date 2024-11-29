@@ -22,4 +22,8 @@ public class TransactionMapper implements Mapper<TransactionEntity, TransactionD
     public TransactionEntity mapFrom(TransactionDto transactionDto) {
         return modelMapper.map(transactionDto, TransactionEntity.class);
     }
+
+    public void mapSrcToDst(TransactionDto transactionDto, TransactionEntity transactionEntity) {
+        modelMapper.map(transactionDto, transactionEntity);
+    }
 }

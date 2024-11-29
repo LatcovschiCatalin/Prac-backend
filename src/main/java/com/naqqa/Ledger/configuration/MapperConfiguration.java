@@ -12,6 +12,8 @@ public class MapperConfiguration {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+        modelMapper.getConfiguration().setPropertyCondition(ctx -> ctx.getSource() != null); // disables the mapping of null fields
+
         return modelMapper;
     }
 

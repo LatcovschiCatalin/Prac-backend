@@ -53,6 +53,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(authenticationService.registerConfirm(request), HttpStatus.OK);
     }
 
+    // TODO return an error code if the provided password is wrong
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
         if (!authenticationService.isRegistered(request.getEmail()))

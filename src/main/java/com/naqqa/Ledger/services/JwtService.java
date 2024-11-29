@@ -25,8 +25,8 @@ public class JwtService {
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
-                .subject(user.getUsername())
-                .claim("scope", "null")
+                .subject(user.getEmail())
+                .claim("scope", "none")
                 .build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

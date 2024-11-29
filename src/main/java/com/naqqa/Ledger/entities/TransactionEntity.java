@@ -1,10 +1,9 @@
 package com.naqqa.Ledger.entities;
 
-import com.naqqa.Ledger.enums.TransactionType;
+import com.naqqa.Ledger.enums.ExpenseType;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,8 +22,16 @@ public class TransactionEntity {
     @JoinColumn(name = "user_id")
     UserEntity user;
 
+    private Boolean isExpense;
     private float amount;
-    private LocalDateTime date = LocalDateTime.now();
+    private ExpenseType type;
 
-    private TransactionType type;
+    private String description;
+
+    private LocalDateTime date;
+
+    @PrePersist
+    private void prePersist() {
+        date = LocalDateTime.now();
+    }
 }
