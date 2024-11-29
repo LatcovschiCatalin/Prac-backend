@@ -30,11 +30,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    @Value("&{rsa.public-key}")
-//    private final RSAPublicKey publicKey;
-//    @Value("&{rsa.private-key}")
-//    private final RSAPrivateKey privateKey;
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean

@@ -48,11 +48,20 @@ public class TransactionService {
         transactionRepository.deleteById(id);
     }
 
-    public void patchTransaction(Long userId, TransactionDto transactionDto) {
+    public void patchTransaction(UserEntity user, TransactionDto transactionDto) {
         TransactionEntity transactionEntity = transactionRepository.findById(transactionDto.getId())
                         .orElseThrow();
+        if (!Objects.equals(user.getId(), transactionEntity.getUser().getId()))
+            return;
 
-        transactionMapper.mapSrcToDst(transactionDto, transactionEntity);
+        if (transactionDto.getIsExpense() != null)
+            transactionEntity.setIsExpense(transactionDto.getIsExpense());
+        if (transactionDto.getType() != null)
+            transactionEntity.setType(transactionDto.getType());
+        if (transactionDto.getAmount() != null)
+            transactionEntity.setAmount(transactionDto.getAmount());
+        if (transactionDto.getDescription() != null)
+            transactionEntity.setDescription(transactionDto.getDescription());
 
         transactionRepository.save(transactionEntity);
     }
