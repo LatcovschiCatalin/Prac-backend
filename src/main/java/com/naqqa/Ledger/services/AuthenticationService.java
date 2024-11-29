@@ -310,22 +310,4 @@ public class AuthenticationService {
                 .message("Password reset successfully!")
                 .build();
     }
-
-    public Optional<UserEntity> authorizeUser(String token) {
-        String sub;
-        try {
-            var decodedJWT = SignedJWT.parse(token.substring(7));
-            sub = decodedJWT.getJWTClaimsSet().getClaim("sub").toString();
-            log.info("sub: " + sub);
-        } catch (ParseException e) {
-            try {
-                throw new Exception("Invalid token!");
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        log.info(sub);
-        return userRepository.findByUsername(sub);
-    }
 }

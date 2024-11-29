@@ -34,7 +34,7 @@ public class TransactionController {
     }
 
     @PatchMapping()
-    public ResponseEntity<String> putTransaction(@AuthenticationPrincipal UserEntity user,
+    public ResponseEntity<String> patchTransaction(@AuthenticationPrincipal UserEntity user,
                                                  @RequestBody TransactionDto transactionDto) {
         transactionService.patchTransaction(user.getId(), transactionDto);
 
